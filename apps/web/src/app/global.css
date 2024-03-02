@@ -1,0 +1,24 @@
+@tailwind base; /* Preflight will be injected here */
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply h-full;
+    @apply min-h-full;
+    @apply bg-gray-100;
+    @apply text-black;
+  }
+
+  body {
+    @apply h-full;
+    @apply min-h-full;
+  }
+}
+
+@media (min-width: 640px) {
+  .w-fixed {
+    flex: 0 1 230px;
+    min-width: 230px;
+  }
+}
