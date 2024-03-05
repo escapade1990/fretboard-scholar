@@ -6,7 +6,7 @@ export const metadata = {
   title: 'Fretboard Scholar',
   description: 'Master fretboard notes',
   icons: {
-    shortcut: '#',
+    shortcut: 'favicon.ico',
   },
 };
 
