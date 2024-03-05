@@ -5,6 +5,8 @@ import clsx from 'clsx';
 import { usePlayNote } from './use-play-note';
 import { PauseCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
 import { Note } from '../../models';
+import Timer from './timer';
+import { FretNumber } from './fret-number';
 
 export const Fretboard: React.FC = () => {
   const fretCount = useAppSelector((state) => state.configuration.fretCount);
@@ -29,10 +31,19 @@ export const Fretboard: React.FC = () => {
   const { isPlaying, currentNote, togglePlay, oneSecLeft } = usePlayNote();
 
   return (
-    <>
-      <ul className="flex flex-col gap-1">
+    <div>
+      {/* Fret board */}
+      <div className="flex gap-1 rounded-md">
+        {guitarStrings[0].map((_, index) => {
+          return (
+            <FretNumber key={index} className="h-12 w-full">
+              {index}
+            </FretNumber>
+          );
+        })}
+      </div>
+      <ul className="flex flex-col gap-2 rounded-md">
         {Object.entries(guitarStrings).map(([guitarString, notes]) => {
-          // If focusMode is true and the current string is not the stringToPractice, return null
           if (focusMode && Number(guitarString) !== stringToPractice - 1) {
             return null;
           }
@@ -40,25 +51,27 @@ export const Fretboard: React.FC = () => {
           return (
             <li key={`${guitarString}`}>
               <ul
-                className={clsx('flex h-12 gap-1 sm:h-16 md:h-20', {
+                className={clsx('flex gap-1', {
                   'h-4 sm:h-8 md:h-12': fretCount > 12,
                 })}
               >
                 {notes.map((note, index) => {
+                  const isNotePlayed = playdNoteStyles(guitarString, note);
                   return (
                     <li
                       key={`${guitarString}-${index}-${note.name}`}
                       className={clsx(
                         {
-                          'blur-none': playdNoteStyles(guitarString, note),
+                          'blur-none': isNotePlayed,
                           'blur-md':
                             blurFretboard &&
                             !playdNoteStyles(guitarString, note),
-                          'basis-4 sm:basis-8 md:basis-12': fretCount > 12,
                           'lg:animate-shake lg:animate-thrice lg:animate-ease-linear':
-                            playdNoteStyles(guitarString, note),
+                            isNotePlayed,
+                          'bg-blue-500 text-white': isNotePlayed,
+                          'bg-white text-gray-700': !isNotePlayed,
                         },
-                        'flex shrink-0 flex-grow basis-4 items-center justify-center rounded-md bg-white shadow hover:blur-none sm:basis-8 md:basis-12',
+                        'flex h-12 w-full items-center justify-center rounded-md shadow transition-colors duration-300 hover:blur-none',
                       )}
                     >
                       <span className="text-3xl">{note.name}</span>
@@ -70,20 +83,20 @@ export const Fretboard: React.FC = () => {
           );
         })}
       </ul>
-      <div className="flex gap-1 pt-4">
+
+      <div className="flex gap-1 rounded-md">
         {guitarStrings[0].map((_, index) => {
           return (
-            <span
-              key={index}
-              className="flex shrink-0 flex-grow basis-4 items-center justify-center text-xl hover:blur-none sm:basis-8 md:basis-12"
-            >
+            <FretNumber key={index} className="h-12 w-full">
               {index}
-            </span>
+            </FretNumber>
           );
         })}
       </div>
+      {/* Fret board  end*/}
+
       <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="relative">
+        <div className="relative flex flex-col items-center">
           <button
             type="button"
             className="rounded-md text-gray-500 hover:text-gray-900 focus:text-gray-900"
@@ -97,6 +110,7 @@ export const Fretboard: React.FC = () => {
               <PlayCircleIcon className="h-12 w-12" aria-hidden="true" />
             )}
           </button>
+          {isPlaying && <Timer isPlaying={isPlaying} />}
         </div>
         <div>
           {isPlaying ? (
@@ -109,6 +123,6 @@ export const Fretboard: React.FC = () => {
           ) : null}
         </div>
       </div>
-    </>
+    </div>
   );
 };
