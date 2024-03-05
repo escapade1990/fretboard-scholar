@@ -11,6 +11,8 @@ type ConfigurationState = {
   interval: number;
   blurFretboard: boolean;
   focusMode: boolean;
+  textToSpeech: boolean;
+  voiceUri?: string;
 };
 
 export const initialState: ConfigurationState = {
@@ -23,6 +25,8 @@ export const initialState: ConfigurationState = {
   interval: 5,
   blurFretboard: true,
   focusMode: false,
+  textToSpeech: false,
+  voiceUri: '',
 };
 
 const configurationSlice = createSlice({
@@ -49,6 +53,12 @@ const configurationSlice = createSlice({
     },
     setFocusMode: (state, action: PayloadAction<boolean>) => {
       state.focusMode = action.payload;
+    },
+    setTextToSpeech: (state, action: PayloadAction<boolean>) => {
+      state.textToSpeech = action.payload;
+    },
+    setVoiceUri: (state, action: PayloadAction<string | undefined>) => {
+      state.voiceUri = action.payload;
     },
   },
 });

@@ -16,6 +16,8 @@ export default function Page() {
       getInterval,
       getBlurFretboard,
       getFocusMode,
+      getTextToSpeech,
+      getVoiceUri,
     },
   ] = useLocalStorageSettings();
   const dispatch = useAppDispatch();
@@ -26,12 +28,16 @@ export default function Page() {
     const interval = Number(getInterval());
     const blur = getBlurFretboard();
     const focusMode = getFocusMode();
+    const textToSpeech = getTextToSpeech();
+    const voiceUri = getVoiceUri();
 
     dispatch(configurationActions.setFretCount(fretCount));
     dispatch(configurationActions.setStringToPractice(stringToPractice));
     dispatch(configurationActions.setInterval(interval));
     dispatch(configurationActions.setBlurFretBoard(blur));
     dispatch(configurationActions.setFocusMode(focusMode));
+    dispatch(configurationActions.setTextToSpeech(textToSpeech));
+    dispatch(configurationActions.setVoiceUri(voiceUri));
 
     setIsReady(true);
   }, [
@@ -41,6 +47,8 @@ export default function Page() {
     getFretCount,
     getInterval,
     getStringToPractice,
+    getTextToSpeech,
+    getVoiceUri,
   ]);
 
   return (

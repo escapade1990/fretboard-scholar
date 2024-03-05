@@ -8,6 +8,8 @@ const keys = {
   interval: `${settingsKeyPrefix}__interval`,
   blurFretboard: `${settingsKeyPrefix}__blur-fretboard`,
   focusMode: `${settingsKeyPrefix}__focus-mode`,
+  textToSpeech: `${settingsKeyPrefix}__text-to-speech`,
+  voiceUri: `${settingsKeyPrefix}__voice-uri`,
 };
 
 export const useLocalStorageSettings = () => {
@@ -91,6 +93,37 @@ export const useLocalStorageSettings = () => {
     return focusMode ? JSON.parse(focusMode) : undefined;
   }, [setFocusMode]);
 
+  const setTextToSpeech = React.useCallback((textToSpeech: boolean) => {
+    window.localStorage.setItem(
+      keys.textToSpeech,
+      JSON.parse(textToSpeech.toString()),
+    );
+  }, []);
+
+  const getTextToSpeech = React.useCallback(() => {
+    let textToSpeech = window.localStorage.getItem(keys.textToSpeech);
+    if (!textToSpeech) {
+      setTextToSpeech(configurationInitialState.textToSpeech);
+      textToSpeech = window.localStorage.getItem(keys.textToSpeech);
+    }
+
+    return textToSpeech ? JSON.parse(textToSpeech) : undefined;
+  }, [setTextToSpeech]);
+
+  const setVoiceUri = React.useCallback((voiceUri: string) => {
+    window.localStorage.setItem(keys.voiceUri, voiceUri);
+  }, []);
+
+  const getVoiceUri = React.useCallback(() => {
+    let voiceUri = window.localStorage.getItem(keys.voiceUri);
+    if (!voiceUri) {
+      setVoiceUri('');
+      voiceUri = window.localStorage.getItem(keys.voiceUri);
+    }
+
+    return voiceUri ? voiceUri : undefined;
+  }, [setVoiceUri]);
+
   return [
     {
       setFretCount,
@@ -98,6 +131,8 @@ export const useLocalStorageSettings = () => {
       setInterval,
       setBlurFretboard,
       setFocusMode,
+      setTextToSpeech,
+      setVoiceUri,
     },
     {
       getFretCount,
@@ -105,6 +140,8 @@ export const useLocalStorageSettings = () => {
       getInterval,
       getBlurFretboard,
       getFocusMode,
+      getTextToSpeech,
+      getVoiceUri,
     },
   ] as const;
 };

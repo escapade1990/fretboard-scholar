@@ -1,3 +1,5 @@
+'use client';
+
 import { useAppSelector } from '../../redux';
 import React from 'react';
 import { fretboardSelectors } from '../../redux/features';
@@ -62,7 +64,7 @@ export const Fretboard: React.FC = () => {
                       key={`${guitarString}-${index}-${note.name}`}
                       className={clsx(
                         {
-                          'blur-none': isNotePlayed,
+                          'z-10 blur-none': isNotePlayed,
                           'blur-md':
                             blurFretboard &&
                             !playdNoteStyles(guitarString, note),

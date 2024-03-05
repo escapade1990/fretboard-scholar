@@ -1,25 +1,70 @@
-import React from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Note } from '../../models';
 import { useAppSelector } from '../../redux';
 import { fretboardSelectors } from '../../redux/features';
+import { useSpeechVoices } from '../../hooks';
 
 export const usePlayNote = () => {
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [oneSecLeft, setOneSecLeft] = React.useState(false);
+  // State for playing status and countdown
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [oneSecLeft, setOneSecLeft] = useState(false);
 
-  const isPlayingRef = React.useRef(isPlaying);
+  // Refs for playing status and animation frame
+  const isPlayingRef = useRef(isPlaying);
   isPlayingRef.current = isPlaying;
+  const animationFrameId = useRef<number>();
 
+  // Selectors for notes, interval, voiceUri, and textToSpeechEnabled
   const notes = useAppSelector(fretboardSelectors.notesToPractice);
   const interval = useAppSelector(
     (state) => state.configuration.interval * 1000,
   );
+  const voiceUri: string | undefined = useAppSelector(
+    (state) => state.configuration.voiceUri,
+  );
+  const isTextToSpeechEnabled: boolean = useAppSelector(
+    (state) => state.configuration.textToSpeech,
+  );
 
-  const [currentNote, setCurrentNote] = React.useState<Note>();
-  const previousNote = React.useRef<Note>();
-  const animationFrameId = React.useRef<number>();
+  // Check if text-to-speech is supported
+  const ttsIsSupported =
+    typeof window !== 'undefined' && 'speechSynthesis' in window;
 
-  const playNotes = React.useCallback(() => {
+  // Speech voices
+  const { voices, loading: voicesAreLoading } = useSpeechVoices();
+
+  // Speech utterance
+  const utterance = useRef(new SpeechSynthesisUtterance());
+
+  // State for current and previous notes
+  const [currentNote, setCurrentNote] = useState<Note>();
+  const previousNote = useRef<Note>();
+
+  // Effect for setting voice
+  useEffect(() => {
+    if (voiceUri && !voicesAreLoading) {
+      const voice = voices.find((v) => v.voiceURI === voiceUri);
+      if (voice) {
+        utterance.current.voice = voice;
+      }
+    } else if (voices.length > 0) {
+      // Fallback to the default voice
+      utterance.current.voice = voices[0];
+    }
+  }, [voiceUri, voices, voicesAreLoading]);
+
+  // Effect for speech synthesis
+  useEffect(() => {
+    if (ttsIsSupported && isPlaying && isTextToSpeechEnabled && currentNote) {
+      utterance.current.text = currentNote.name; // Assuming 'name' is a property of Note
+      window.speechSynthesis.speak(utterance.current);
+    } else {
+      window.speechSynthesis.cancel(); // Cancel any ongoing speech
+    }
+  }, [isTextToSpeechEnabled, currentNote, isPlaying, ttsIsSupported]);
+
+  // Function for playing notes
+  const playNotes = useCallback(() => {
     const timestamp = performance.now();
     if (!animationFrameId.current) {
       animationFrameId.current = timestamp;
@@ -43,7 +88,8 @@ export const usePlayNote = () => {
     }
   }, [interval, notes, oneSecLeft, setOneSecLeft]);
 
-  const togglePlay = React.useCallback(() => {
+  // Function for toggling play
+  const togglePlay = useCallback(() => {
     setIsPlaying((prev) => {
       const nextIsPlaying = !prev;
       if (nextIsPlaying) {
@@ -53,7 +99,8 @@ export const usePlayNote = () => {
     });
   }, [playNotes]);
 
-  React.useEffect(() => {
+  // Effect for animation frame
+  useEffect(() => {
     if (isPlaying) {
       requestAnimationFrame(playNotes);
     } else if (animationFrameId.current) {

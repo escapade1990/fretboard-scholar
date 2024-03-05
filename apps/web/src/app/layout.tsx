@@ -5,6 +5,9 @@ import { StoreProvider } from './store-provider';
 export const metadata = {
   title: 'Fretboard Scholar',
   description: 'Master fretboard notes',
+  icons: {
+    shortcut: '#',
+  },
 };
 
 export default function RootLayout({

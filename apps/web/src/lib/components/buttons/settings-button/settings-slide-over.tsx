@@ -1,11 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { configurationActions } from '../../../redux/features';
 import { SlideOver } from '../../slide-over';
-import { useFormatOrdinals, useLocalStorageSettings } from '../../../hooks';
+import {
+  useFormatOrdinals,
+  useLocalStorageSettings,
+  useSpeechVoices,
+} from '../../../hooks';
 import { Switch } from '../../switch';
+import { TextToSpeechList } from './text-to-speech-list';
 
 export const Settings: React.FC = () => {
   const isFirstRender = React.useRef(true);
@@ -25,6 +30,14 @@ export const Settings: React.FC = () => {
     (state) => state.configuration.blurFretboard,
   );
   const focusMode = useAppSelector((state) => state.configuration.focusMode);
+  const textToSpeech = useAppSelector(
+    (state) => state.configuration.textToSpeech,
+  );
+
+  const voiceUri = useAppSelector((state) => state.configuration.voiceUri);
+
+  const ttsIsSupported =
+    typeof window !== 'undefined' && 'speechSynthesis' in window;
 
   const [
     {
@@ -33,12 +46,23 @@ export const Settings: React.FC = () => {
       setInterval,
       setBlurFretboard,
       setFocusMode,
+      setTextToSpeech,
+      setVoiceUri,
     },
   ] = useLocalStorageSettings();
 
-  React.useEffect(() => {
-    isFirstRender.current = false;
-  }, []);
+  const { voices, loading: voicesAreLoading } = useSpeechVoices();
+  const [selectedVoice, setSelectedVoice] =
+    useState<SpeechSynthesisVoice | null>(null);
+
+  useEffect(() => {
+    if (voicesAreLoading) return;
+    const selectedVoice =
+      voices.find((voice) => voice.voiceURI === voiceUri) ?? voices[0];
+
+    setSelectedVoice(selectedVoice ?? null);
+    setVoiceUri(selectedVoice?.voiceURI ?? '');
+  }, [voices, voiceUri, voicesAreLoading, setVoiceUri]);
 
   return (
     <SlideOver title="Settings" isOpen={isOpen} onClose={onClose}>
@@ -123,6 +147,34 @@ export const Settings: React.FC = () => {
             }}
           />
         </div>
+        {ttsIsSupported && !voicesAreLoading && (
+          <>
+            <div className="flex items-center justify-between gap-4">
+              <span>Use text-to-speach</span>
+              <Switch
+                enabled={textToSpeech}
+                setEnabled={(value) => {
+                  setTextToSpeech(value);
+                  dispatch(configurationActions.setTextToSpeech(value));
+                }}
+              />
+            </div>
+            {textToSpeech && (
+              <div className="flex items-center justify-between gap-4">
+                <span>Voice</span>
+                <TextToSpeechList
+                  className="h-8 w-2/3"
+                  selected={selectedVoice}
+                  voices={voices}
+                  onVoiceSelect={(voice) => {
+                    setVoiceUri(voice?.voiceURI ?? '');
+                    dispatch(configurationActions.setVoiceUri(voice?.voiceURI));
+                  }}
+                />
+              </div>
+            )}
+          </>
+        )}
       </div>
     </SlideOver>
   );
