@@ -8,6 +8,7 @@ const keys = {
   interval: `${settingsKeyPrefix}__interval`,
   blurFretboard: `${settingsKeyPrefix}__blur-fretboard`,
   focusMode: `${settingsKeyPrefix}__focus-mode`,
+  highlightNotesOnAllStrings: `${settingsKeyPrefix}__highlight-notes-on-all-strings`,
   textToSpeech: `${settingsKeyPrefix}__text-to-speech`,
   voiceUri: `${settingsKeyPrefix}__voice-uri`,
 };
@@ -93,6 +94,34 @@ export const useLocalStorageSettings = () => {
     return focusMode ? JSON.parse(focusMode) : undefined;
   }, [setFocusMode]);
 
+  const setHighlightNotesOnAllStrings = React.useCallback(
+    (highlightNotesOnAllStrings: boolean) => {
+      window.localStorage.setItem(
+        keys.highlightNotesOnAllStrings,
+        JSON.parse(highlightNotesOnAllStrings.toString()),
+      );
+    },
+    [],
+  );
+
+  const getHighlightNotesOnAllStrings = React.useCallback(() => {
+    let highlightNotesOnAllStrings = window.localStorage.getItem(
+      keys.highlightNotesOnAllStrings,
+    );
+    if (!highlightNotesOnAllStrings) {
+      setHighlightNotesOnAllStrings(
+        configurationInitialState.highlightNotesOnAllStrings,
+      );
+      highlightNotesOnAllStrings = window.localStorage.getItem(
+        keys.highlightNotesOnAllStrings,
+      );
+    }
+
+    return highlightNotesOnAllStrings
+      ? JSON.parse(highlightNotesOnAllStrings)
+      : undefined;
+  }, [setHighlightNotesOnAllStrings]);
+
   const setTextToSpeech = React.useCallback((textToSpeech: boolean) => {
     window.localStorage.setItem(
       keys.textToSpeech,
@@ -131,6 +160,7 @@ export const useLocalStorageSettings = () => {
       setInterval,
       setBlurFretboard,
       setFocusMode,
+      setHighlightNotesOnAllStrings,
       setTextToSpeech,
       setVoiceUri,
     },
@@ -140,6 +170,7 @@ export const useLocalStorageSettings = () => {
       getInterval,
       getBlurFretboard,
       getFocusMode,
+      getHighlightNotesOnAllStrings,
       getTextToSpeech,
       getVoiceUri,
     },

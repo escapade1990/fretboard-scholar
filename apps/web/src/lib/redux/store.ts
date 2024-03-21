@@ -1,9 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {
-  configurationInitialState,
-  configurationReducer,
-  fretboardReducer,
-} from './features';
+import { configurationReducer, fretboardReducer } from './features';
 import { getNotesPerString } from '../utils';
 
 export type PreloadedState = {

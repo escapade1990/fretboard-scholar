@@ -13,6 +13,9 @@ import { FretNumber } from './fret-number';
 export const Fretboard: React.FC = () => {
   const fretCount = useAppSelector((state) => state.configuration.fretCount);
   const focusMode = useAppSelector((state) => state.configuration.focusMode);
+  const highlightNotesOnAllStrings = useAppSelector(
+    (state) => state.configuration.highlightNotesOnAllStrings,
+  );
   const stringToPractice = useAppSelector(
     (state) => state.configuration.stringToPractice,
   );
@@ -24,11 +27,13 @@ export const Fretboard: React.FC = () => {
     fretboardSelectors.activeStringsWithNotes,
   );
 
-  const playdNoteStyles = (guitarString: string, note: Note) =>
-    isPlaying &&
-    oneSecLeft &&
-    Number(guitarString) === stringToPractice - 1 &&
-    note === currentNote;
+  const isNotePlayed = (note: Note, guitarString: string) => {
+    const result = isPlaying && oneSecLeft && note === currentNote;
+
+    return highlightNotesOnAllStrings
+      ? result
+      : result && Number(guitarString) === stringToPractice - 1;
+  };
 
   const { isPlaying, currentNote, togglePlay, oneSecLeft } = usePlayNote();
 
@@ -36,10 +41,10 @@ export const Fretboard: React.FC = () => {
     <div>
       {/* Fret board */}
       <div className="flex gap-1 rounded-md">
-        {guitarStrings[0].map((_, index) => {
+        {guitarStrings[0].map((_, stringIndex) => {
           return (
-            <FretNumber key={index} className="h-12 w-full">
-              {index}
+            <FretNumber key={stringIndex} className="h-12 w-full">
+              {stringIndex}
             </FretNumber>
           );
         })}
@@ -57,21 +62,20 @@ export const Fretboard: React.FC = () => {
                   'h-4 sm:h-8 md:h-12': fretCount > 12,
                 })}
               >
-                {notes.map((note, index) => {
-                  const isNotePlayed = playdNoteStyles(guitarString, note);
+                {notes.map((note, noteIndex) => {
+                  const _isNotePlayed = isNotePlayed(note, guitarString);
                   return (
                     <li
-                      key={`${guitarString}-${index}-${note.name}`}
+                      key={`${guitarString}-${noteIndex}-${note.name}`}
                       className={clsx(
                         {
-                          'z-10 blur-none': isNotePlayed,
+                          'z-10 blur-none': _isNotePlayed,
                           'blur-md':
-                            blurFretboard &&
-                            !playdNoteStyles(guitarString, note),
+                            blurFretboard && !isNotePlayed(note, guitarString),
                           'lg:animate-shake lg:animate-thrice lg:animate-ease-linear':
-                            isNotePlayed,
-                          'bg-blue-500 text-white': isNotePlayed,
-                          'bg-white text-gray-700': !isNotePlayed,
+                            _isNotePlayed,
+                          'bg-blue-500 text-white': _isNotePlayed,
+                          'bg-white text-gray-700': !_isNotePlayed,
                         },
                         'flex h-12 w-full items-center justify-center rounded-md shadow transition-colors duration-300 hover:blur-none',
                       )}

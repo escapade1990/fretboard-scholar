@@ -16,6 +16,7 @@ export default function Page() {
       getInterval,
       getBlurFretboard,
       getFocusMode,
+      getHighlightNotesOnAllStrings,
       getTextToSpeech,
       getVoiceUri,
     },
@@ -28,6 +29,7 @@ export default function Page() {
     const interval = Number(getInterval());
     const blur = getBlurFretboard();
     const focusMode = getFocusMode();
+    const highlightNotesOnAllStrings = getHighlightNotesOnAllStrings();
     const textToSpeech = getTextToSpeech();
     const voiceUri = getVoiceUri();
 
@@ -36,6 +38,11 @@ export default function Page() {
     dispatch(configurationActions.setInterval(interval));
     dispatch(configurationActions.setBlurFretBoard(blur));
     dispatch(configurationActions.setFocusMode(focusMode));
+    dispatch(
+      configurationActions.setHighlightNotesOnAllStrings(
+        highlightNotesOnAllStrings,
+      ),
+    );
     dispatch(configurationActions.setTextToSpeech(textToSpeech));
     dispatch(configurationActions.setVoiceUri(voiceUri));
 
@@ -45,6 +52,7 @@ export default function Page() {
     getBlurFretboard,
     getFocusMode,
     getFretCount,
+    getHighlightNotesOnAllStrings,
     getInterval,
     getStringToPractice,
     getTextToSpeech,

@@ -8,7 +8,7 @@ type Props = React.PropsWithChildren & {
 export const FretNumber: React.FC<Props> = ({ className, children }) => (
   <span
     className={clsx(
-      'flex items-center justify-center text-xl text-gray-800 hover:blur-none',
+      'flex items-center justify-center text-2xl text-gray-800 hover:blur-none',
       className,
     )}
   >

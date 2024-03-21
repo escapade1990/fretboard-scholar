@@ -30,6 +30,9 @@ export const Settings: React.FC = () => {
     (state) => state.configuration.blurFretboard,
   );
   const focusMode = useAppSelector((state) => state.configuration.focusMode);
+  const highlightNotesOnAllStrings = useAppSelector(
+    (state) => state.configuration.highlightNotesOnAllStrings,
+  );
   const textToSpeech = useAppSelector(
     (state) => state.configuration.textToSpeech,
   );
@@ -46,6 +49,7 @@ export const Settings: React.FC = () => {
       setInterval,
       setBlurFretboard,
       setFocusMode,
+      setHighlightNotesOnAllStrings,
       setTextToSpeech,
       setVoiceUri,
     },
@@ -144,6 +148,18 @@ export const Settings: React.FC = () => {
             setEnabled={(value) => {
               setFocusMode(value);
               dispatch(configurationActions.setFocusMode(value));
+            }}
+          />
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span>Show notes on all strings</span>
+          <Switch
+            enabled={highlightNotesOnAllStrings}
+            setEnabled={(value) => {
+              setHighlightNotesOnAllStrings(value);
+              dispatch(
+                configurationActions.setHighlightNotesOnAllStrings(value),
+              );
             }}
           />
         </div>
