@@ -36,7 +36,7 @@ export const SlideOver: React.FC<Props> = ({
     <Transition.Root show={isOpen} as={React.Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child as={React.Fragment} {...fadeTransition}>
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-gray-500/75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-hidden">
@@ -46,7 +46,7 @@ export const SlideOver: React.FC<Props> = ({
                 <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md">
                   <div className="flex h-full flex-col overflow-auto bg-white py-6 shadow-xl">
                     <div className="flex justify-between px-4 sm:px-6">
-                      <Dialog.Title className="text-base font-semibold uppercase leading-6 text-gray-900">
+                      <Dialog.Title className="text-base leading-6 font-semibold text-gray-900 uppercase">
                         {title}
                       </Dialog.Title>
                       <button

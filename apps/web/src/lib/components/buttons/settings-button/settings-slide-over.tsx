@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { configurationActions } from '../../../redux/features';
 import { SlideOver } from '../../slide-over';
@@ -13,8 +13,6 @@ import { Switch } from '../../switch';
 import { TextToSpeechList } from './text-to-speech-list';
 
 export const Settings: React.FC = () => {
-  const isFirstRender = React.useRef(true);
-
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.configuration.settingIsOpen);
   const onClose = () => dispatch(configurationActions.setSettingIsOpen(false));
@@ -56,17 +54,8 @@ export const Settings: React.FC = () => {
   ] = useLocalStorageSettings();
 
   const { voices, loading: voicesAreLoading } = useSpeechVoices();
-  const [selectedVoice, setSelectedVoice] =
-    useState<SpeechSynthesisVoice | null>(null);
-
-  useEffect(() => {
-    if (voicesAreLoading) return;
-    const selectedVoice =
-      voices.find((voice) => voice.voiceURI === voiceUri) ?? voices[0];
-
-    setSelectedVoice(selectedVoice ?? null);
-    setVoiceUri(selectedVoice?.voiceURI ?? '');
-  }, [voices, voiceUri, voicesAreLoading, setVoiceUri]);
+  const selectedVoice =
+    voices.find((voice) => voice.voiceURI === voiceUri) ?? voices[0] ?? null;
 
   return (
     <SlideOver title="Settings" isOpen={isOpen} onClose={onClose}>
@@ -88,10 +77,8 @@ export const Settings: React.FC = () => {
                 className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
               />
             </label>
-            <span className="absolute left-0 -bottom-6 text-sm ">Min (3)</span>
-            <span className="absolute right-0 -bottom-6 text-sm ">
-              Max (24)
-            </span>
+            <span className="absolute -bottom-6 left-0 text-sm">Min (3)</span>
+            <span className="absolute right-0 -bottom-6 text-sm">Max (24)</span>
           </div>
         </div>
 

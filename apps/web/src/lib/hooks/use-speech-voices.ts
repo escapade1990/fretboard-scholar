@@ -5,22 +5,21 @@ export const useSpeechVoices = (lang = 'en-US') => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      setVoices([]);
+      setLoading(false);
+      return;
+    }
+
+    const synthesis = window.speechSynthesis;
     const populateVoices = () => {
-      const availableVoices = speechSynthesis
-        .getVoices()
-        .filter((voice) => voice.lang === lang);
-      if (availableVoices.length > 0) {
-        setVoices(availableVoices);
-        setLoading(false);
-      }
+      setVoices(synthesis.getVoices().filter((voice) => voice.lang === lang));
+      setLoading(false);
     };
 
-    speechSynthesis.addEventListener('voiceschanged', populateVoices);
+    synthesis.addEventListener('voiceschanged', populateVoices);
     populateVoices();
-
-    return () => {
-      speechSynthesis.removeEventListener('voiceschanged', populateVoices);
-    };
+    return () => synthesis.removeEventListener('voiceschanged', populateVoices);
   }, [lang]);
 
   return { voices, loading };
