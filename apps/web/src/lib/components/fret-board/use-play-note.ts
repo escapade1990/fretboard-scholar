@@ -12,7 +12,7 @@ export const usePlayNote = () => {
   // Refs for playing status and animation frame
   const isPlayingRef = useRef(isPlaying);
   isPlayingRef.current = isPlaying;
-  const animationFrameId = useRef<number>();
+  const animationFrameId = useRef<number | undefined>(undefined);
 
   // Selectors for notes, interval, voiceUri, and textToSpeechEnabled
   const notes = useAppSelector(fretboardSelectors.notesToPractice);
@@ -38,7 +38,7 @@ export const usePlayNote = () => {
 
   // State for current and previous notes
   const [currentNote, setCurrentNote] = useState<Note>();
-  const previousNote = useRef<Note>();
+  const previousNote = useRef<Note | undefined>(undefined);
 
   // Effect for setting voice
   useEffect(() => {

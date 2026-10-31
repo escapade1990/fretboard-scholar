@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const StoreProvider: React.FC<Props> = ({ children }) => {
-  const storeRef = useRef<AppStore>();
+  const storeRef = useRef<AppStore | undefined>(undefined);
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = makeStore({ maxFretCount: 24 });

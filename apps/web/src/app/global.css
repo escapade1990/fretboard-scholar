@@ -1,6 +1,5 @@
-@tailwind base; /* Preflight will be injected here */
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss'; /* Preflight will be injected here */
+@config '../../tailwind.config.js';
 
 @layer base {
   html {
