@@ -26,4 +26,4 @@ npm run check
 permission to open local IPC sockets; disabling its daemon alone does not remove that requirement.
 
 The [orchestration trial](docs/orchestration-trial.md) records dependency compatibility ceilings,
-behavioral verification, milestone commits and monitoring findings from the refactor.
+behavioral verification and milestone commits from the refactor.

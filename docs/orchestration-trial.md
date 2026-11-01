@@ -15,7 +15,6 @@ verified milestone. The user approved this plan on 2026-11-01.
 - The sandbox blocks Nx's local IPC socket; the baseline build required an approved external run.
 - No application unit tests existed. Root scripts provided only build, start, and dev commands.
 - Orchestration CLI `npm run doctor`: 0 changes, 16 unchanged, 0 conflicts; Codex CLI 0.166.0.
-- Installed native monitor opened successfully. Reuse it throughout this session.
 - `fe_researcher` completed read-only baseline research before implementation approval.
 
 ## Task ledger
@@ -60,28 +59,6 @@ assertions must be preserved until failures are classified independently.
   vulnerabilities (3 low, 45 moderate), with no high or critical findings.
 - Characterization tests passed: 2 suites, 8 tests. No prior test expectation was weakened.
 
-## Observation correction
-
-The user rejected the native command-center display because it showed an inactive root while the
-app displayed working subagents and their current actions. The user selected a tmux-compatible
-terminal panel. Work in the codex-orchestration repository now observes existing current-task
-session-log events, using native parent links instead of a separate daemon's runtime state.
-
-The first monitor task exhausted its default repair budget. The user explicitly granted two more
-attempts, then two more after independent review reproduced long-metadata discovery and URL-encoded
-checkout-path defects. Six attempts were used in total. Independent review also classified the
-installed-helper path mismatch between /var and /private/var before the assertion was canonicalized.
-The final monitor checks passed all 54 tests, typecheck, lint and formatting. Both independent
-standards/spec reviews closed their findings. Live preview found real current and completed
-descendants. Protected installation and a real tmux launch succeeded; doctor reports 17 unchanged
-managed files with no conflicts. Protected config, instructions and hooks hashes remain unchanged.
-
-The user then clarified that the desired monitor is a live feed of actual orchestrator/agent
-messages. The installed status panel does not meet that requirement and is not an accepted final
-monitoring solution. Custom expansion stopped while ready-made alternatives were investigated.
-Source review recommends evaluating agentglass first; no third-party viewer was installed or run.
-Its message-format limitations still need an authorized live trial.
-
 ## Refactor and final proof
 
 - Settings retain all established keys, defaults, raw voice URI format and stable public methods.
@@ -115,16 +92,14 @@ Its message-format limitations still need an authorized live trial.
 - `ac37b40`: note generation and selector characterization.
 - `9abcdb3`: safe settings persistence.
 - `0a632de`: playback/speech ownership, regression coverage and backdrop compatibility.
-- codex-orchestration `8d688b6`: tested terminal activity panel and protected packaging.
 
 The installed FE roles were exercised by this signed-in desktop chat, with configured Luna, Terra
-and Sol variants. CLI doctor, installation, standalone monitor, real tmux and launcher unit tests
-were exercised. A new interactive task launched through npm start was not run; that is a remaining
-CLI end-to-end acceptance boundary, not evidence supplied by this desktop trial.
+and Sol variants. CLI doctor, installation and launcher unit tests were exercised. A new interactive
+task launched through npm start was not run; that is a remaining CLI end-to-end acceptance boundary,
+not evidence supplied by this desktop trial.
 
 ## Verification and continuation
 
-The refactor is complete and verified. Further monitoring work should start with a ready-made
-viewer trial against a real assignment, message, response and follow-up. Agree on that concrete
-message-content example before implementing another display. Preserve repair counts for any
-unfinished criterion; completed application tasks have no remaining acceptance failures.
+The refactor is complete and verified. Completed application tasks have no remaining acceptance
+failures. A separate interactive CLI-launched trial remains outside the evidence from this desktop
+session.
