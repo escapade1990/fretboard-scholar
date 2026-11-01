@@ -25,5 +25,10 @@ npm run check
 `check` runs types, lint, unit tests and production build. In restricted environments Nx needs
 permission to open local IPC sockets; disabling its daemon alone does not remove that requirement.
 
+Next.js manages `apps/web/next-env.d.ts`; Git ignores it because dev and production use different
+generated type paths. `typecheck` generates the required Next.js types before running TypeScript,
+so it also works before the first dev server or build. The generated `apps/web/AGENTS.md` block is
+tracked as Next.js recommends.
+
 The [orchestration trial](docs/orchestration-trial.md) records dependency compatibility ceilings,
 behavioral verification and milestone commits from the refactor.
